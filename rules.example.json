@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "updated_at": 0,
+  "rules": [
+    {
+      "id": "example-notepad",
+      "name": "Example Notepad",
+      "exe_name": "notepad.exe",
+      "exe_path": "",
+      "match_mode": "name",
+      "time_mode": "runtime",
+      "usage_limit_minutes": 10.0,
+      "cooldown_minutes": 5.0,
+      "action": "close",
+      "overlay_top_inset": 0,
+      "enabled": false,
+      "created_at": 0
+    },
+    {
+      "id": "example-overlay-app",
+      "name": "Example Overlay App",
+      "exe_name": "example.exe",
+      "exe_path": "",
+      "match_mode": "name",
+      "time_mode": "foreground",
+      "usage_limit_minutes": 10.0,
+      "cooldown_minutes": 5.0,
+      "action": "overlay",
+      "overlay_top_inset": 48,
+      "enabled": false,
+      "created_at": 0
+    }
+  ]
+}

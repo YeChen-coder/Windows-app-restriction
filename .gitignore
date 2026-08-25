@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+error.log
+state.json
+schedule.json
+rules.json
