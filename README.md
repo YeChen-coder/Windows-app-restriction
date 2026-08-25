@@ -1,74 +1,82 @@
-技术上的部署在 install.md 这边，主要放作者的一个个人思路.
-
+Technical installation details are in [INSTALL.md](INSTALL.md). This README mainly records the author's personal motivation and design thinking.
 
 <img width="1035" height="667" alt="image" src="https://github.com/user-attachments/assets/4dfd330d-c053-4d2d-bc88-7f75d926af29" />
-下图就是它跑起来的页面，这是一个运行在 Windows 上的项目，整体走的是简单明了的实用主义路线。
 
-开发这个项目的初衷，是因为作者本身思维非常活跃、表达欲异常旺盛，容易管不住自己的手。无论是在写作，还是在用 ChatGPT、Codex 进行 vibe coding 时，都极容易陷入其中。作者本身有 ADHD，一旦进入 hyperfocus（过度专注）状态，往往就很难靠人力意志去扭转，变成一种非自愿的时间投入。所以本着“创造一个不需要让人自制力那么好也能起效的环境”这一核心原则，催生出了这个项目。
+The image above shows the app running. This is a Windows project built around a simple, direct, practical idea.
 
-整体的使用逻辑非常直接，所有功能都写在明面上，没有任何二级菜单：
+The original reason I built this project is that my mind is very active, I have a strong urge to express and make things, and I am not always good at stopping my hands. Whether I am writing, using ChatGPT, or doing vibe coding with Codex, it is very easy for me to get pulled in. I have ADHD, and once I enter a hyperfocus state, it can become very hard to reverse course through willpower alone. The result can be a kind of involuntary time investment.
 
-1. 添加程序：
-(a) 知道程序名称的，直接输入名字添加
-(b) 不知道名字的，通过 "Add from running" 直接从当前正在运行的程序列表中选择添加
-2. 规则管理：
-(a) 每条规则（rule）都可以单独编辑，支持常规的增删改查以及 Enable / Disable 切换
-(b) 支持 Daily Schedule：可以设定仅在工作时间或白天时段对特定程序进行限制
-(c) One-shot Timer：针对临时性、非日常高频出现的过度专注情况，可以只设定一次性倒计时，运行完即失效，无需建立长期规则
+So the core principle behind this project is:
 
+> Do not try to make the person better. Design an environment where the person does not need to be that good.
 
-对不同的程序，就比如说游戏，它很多时候是全屏的，只要开了就代表在玩。但对于有一些程序，比如像 ChatGPT 或者 Codex，很多时候是你发了一段话，让它自动在后台跑着。像这种就会被更宽容一点，status 会被设为 background。当 ChatGPT 不在前台的时候，它不会出来，也不会继续倒计时。
+That principle is what led to this tool.
+
+The overall usage model is intentionally straightforward. Everything is visible on the main screen, with no hidden second-level menus:
+
+1. Add an application:
+   - If you know the program name, add it directly.
+   - If you do not know the name, use `Add from running` to choose from currently running processes.
+2. Manage rules:
+   - Each rule can be edited independently, including normal create/read/update/delete operations and Enable / Disable switching.
+   - `Daily Schedule` is supported, so specific applications can be restricted only during work hours or daytime windows.
+   - `One-shot Timer` is for temporary, non-routine hyperfocus situations. You can set a one-time countdown, let it run once, and then let it disappear without creating a long-term rule.
+
+For different kinds of programs, the timing logic can be different. For games, the application is often full-screen, and if it is open, that usually means I am playing it. But for programs like ChatGPT or Codex, I might send a prompt and then let it run in the background. Those cases should be treated more gently. Their status can become `Background`; when ChatGPT is not in the foreground, it does not appear as active and the countdown does not continue.
+
 <img width="960" height="34" alt="image" src="https://github.com/user-attachments/assets/60b9aca6-02ac-4d64-80c2-cd649c42cea8" />
 
-当然，这些都是可以改的。看一下下面这张图：
-
-目前这个 time mode 是按照 foreground 来计算的，也就是只有在前台时才会继续计时。
-
-但如果改成 runtime，就跟其他游戏一样，只要打开了就会开始倒计时。
-
+These settings are editable. For example:
 
 <img width="403" height="367" alt="image" src="https://github.com/user-attachments/assets/8ed28db3-618c-48d7-bc28-197dfa06ae19" />
 
-另外这边的 action 也是可选的，可以选择 close 或者 overlay：
+In the example above, the `time mode` is set to `foreground`, meaning the timer only continues while the application is in the foreground.
+
+If it is changed to `runtime`, it behaves more like a game rule: once the app is open, the countdown starts.
+
+The `action` is also configurable. It can be set to `close` or `overlay`:
 
 <img width="212" height="73" alt="image" src="https://github.com/user-attachments/assets/5e5adf0a-4587-471d-bc4d-e4b950aef8af" />
 
-1. close（直接关闭）：
-拿游戏做例子，比如《原神》，打开之后开始倒计时，10 分钟后它会自动把程序关掉。
-2. overlay（遮罩模式）：
-像 ChatGPT 这种在后台跑着的程序，肯定不能直接给它关了。所以这边的 action 可以改成 overlay，它只是弹出一个遮罩把界面盖住，遮挡的时间对应 cooldown minutes（当前设的是 5 分钟）。5 分钟后遮罩消失，你就可以继续使用 ChatGPT、接着跟它聊天了。
+1. `close`
 
-因为有些程序顶部基本都有一条窗口栏（包含缩小、全屏、关闭等按钮），overlay 有时候会把它遮住，所以又加了一个 overlay top index px 参数。
-以及这个 cooldown 的时间也是可以调节的。反正就是能定制就定制，就是这么一个思路.
-这些都是可以调节的，主要是为了实际使用中的各种场景考虑的设置思路
+   For example, for a game like Genshin Impact, once it is opened, the countdown starts. After 10 minutes, the app closes it automatically.
 
-当有一条规则被激活的时候，页面上就会出现一个倒计时的显示。这个小东西是可以拖动的，随便放哪里都行，不会影响日常使用。
+2. `overlay`
+
+   For something like ChatGPT, closing the process directly is usually not acceptable, because it might be doing background work. In that case, the action can be changed to `overlay`. Instead of killing the process, the app places a blocking overlay over the interface. The overlay duration corresponds to the cooldown minutes, currently 5 minutes in my setup. After 5 minutes, the overlay disappears and the program can be used again.
+
+Because many applications have a top title bar with minimize, maximize, and close buttons, the overlay can sometimes cover controls that should remain reachable. For that reason, there is also an `overlay top inset px` setting.
+
+The cooldown duration is configurable as well. The general idea is: if a setting helps adapt the tool to real use, make it configurable.
+
+When a rule is active, a small countdown window appears. It can be dragged anywhere on screen and placed wherever it is least disruptive.
+
 <img width="1012" height="673" alt="image" src="https://github.com/user-attachments/assets/eae76400-0a14-45e2-8662-339e8016f2a6" />
 
+## Emergency Controls
 
-4. 紧急控制：
-(a) 遇到确实需要继续使用但被拦截的紧急情况，可以直接暂停/停用所有规则（包括一次性计时和日常规则）
-(b) Pause Daily Rules：仅临时暂停日常的 Daily 规则
+- If there is a real emergency and I genuinely need to continue using something that is being blocked, I can pause or disable all restrictions, including one-shot timers and daily rules.
+- `Pause Daily Rules` pauses only the recurring daily rules.
 
-除此之外，这个是作者的一个小巧思。
+There is also a small piece of design that I personally like.
 
-因为在很多情况下，尤其是当我状态确实不是很好、整个人很糊涂的时候，什么程序限制其实都不太管用。我觉得这也是为什么市面上虽然有那么多自律软件和自律 App，但讲道理，真正用起来可能并没有那么有效的原因。
+In many situations, especially when I am not in a good state and my mind is foggy, simple app blockers are not enough. I think this is one reason why there are so many self-discipline apps on the market, but many of them are not actually that effective in practice.
 
-所以，作者在这里特意放了一个“防呆设定”，里面有一段作者自己还蛮喜欢的话(大家要改的话，就都可以改，这个非常容易。去找 Codex 让他改一下就行了)。这里的要求是：
+So I added a "foolproofing" step. It contains a sentence that I personally like. If you want to change it, it is easy to modify in the code, or you can ask Codex to change it for you.
 
-1. 必须把这段话打出来，或者说输入进去——不管是口头输入还是用键盘打进去都可以。
-2. 并不需要 100% 完全对，这里只设置了一个 66% 的匹配度，差不多就行。
-3. 只有输入了这段话，系统才允许去停掉那些规则和限制。
+The requirement is:
 
-虽然实际用起来效果可能也没那么大，但有了一层防呆设定，能多去 remind 自己一些东西，总归是有好处的。
+1. The user must type the required text. It can be typed manually or entered through voice input.
+2. It does not need to match perfectly. The current threshold is 66%, so approximate matching is enough.
+3. Only after entering that text does the system allow rules and restrictions to be stopped.
+
+In practice, this may not be a perfect solution. But having one more deliberate friction point can remind me of what I am doing, and that is still useful.
+
 <img width="713" height="430" alt="image" src="https://github.com/user-attachments/assets/331d4040-430f-4b10-8814-0b4d2a64ee40" />
 
+Overall, the feature set is simple and direct.
 
-总之，整体来说功能非常简单直观。
+There are still some potential issues, mostly caused by how Windows itself works. Some applications are hosted through shared system-level frameworks and cannot be cleanly selected as independent targets. Restricting those lower-level frameworks can be dangerous. The app includes some checks to prevent certain Windows system components from being selected as restriction targets, but because I do not yet have enough real-world cases and testing coverage, I cannot guarantee absolute safety. Use it carefully.
 
-不过目前也存在一些潜在问题（更多是源于 Windows 系统的机制）：有些程序属于系统通用的大框架，无法被单独拆分选定。如果对这类底层框架进行限制会非常危险。作者虽然在程序中加入了一定的检查机制，禁止将某些系统核心组件选为限制目标，但由于缺乏足够的使用经验和案例积累，目前还无法确保绝对安全，大家使用时建议多加小心.
-
-还有一个问题是遮罩异常。如果你的电脑是多桌面的（注意：不是多屏幕），它就会导致这样一个问题：你虽然切换了桌面，要限制的程序也不在你当前看的桌面上，但那个遮罩还会连着带走。
-它是一个 bug，作者承认了，而且因为确实没影响本人使用，所以现在确实没什么动力去修。
-
-
+There is also an overlay issue. If your computer uses multiple virtual desktops, not multiple monitors, an overlay may sometimes follow you when switching desktops, even though the restricted program is not on the desktop you are currently viewing. This is a bug. I acknowledge it, and because it does not currently affect my own usage much, I have not prioritized fixing it yet.
